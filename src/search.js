@@ -1,5 +1,7 @@
 import OCL from 'openchemlib';
 
+import config from '../config.json';
+
 import { connect, close } from './db.js';
 import { indexBitCount, bitsOn } from './bitCount.js';
 
@@ -25,15 +27,15 @@ async function run() {
   const searcher = new OCL.SSSearcher();
   searcher.setFragment(queryMol);
 
-  const count = await collection.count({});
-  console.log('total count', count);
+  // const count = await collection.count({});
+  // console.log('total count', count);
 
   console.log('index bits set', indexBits);
 
-  const countWithBits = await collection.count({
-    indexBits: { $gte: indexBits }
-  });
-  console.log('count with index bits', countWithBits);
+  // const countWithBits = await collection.count({
+  //   indexBits: { $gte: indexBits }
+  // });
+  // console.log('count with index bits', countWithBits);
 
   const filter = {
     indexBits: { $gte: indexBits }
@@ -45,13 +47,14 @@ async function run() {
   console.log('index', index);
   console.log('filter', filter);
 
-  console.time('count with bitwise');
-  const countWithBitwise = await collection.count(filter);
-  console.timeEnd('count with bitwise');
-  console.log('count with bitwise', countWithBitwise);
+  // console.time('count with bitwise');
+  // const countWithBitwise = await collection.count(filter);
+  // console.timeEnd('count with bitwise');
+  // console.log('count with bitwise', countWithBitwise);
 
-  console.time('find max 10');
-  const cursor = await collection.find(filter).sort({ mw: 1 });
+  const max = 25;
+  console.time(`find max ${max}`);
+  const cursor = await collection.find(filter);
   let found = [];
   let checked = 0;
   for await (const value of cursor) {
@@ -60,12 +63,12 @@ async function run() {
     searcher.setMolecule(molecule);
     if (searcher.isFragmentInMolecule()) {
       found.push(value);
-      if (found.length === 25) {
+      if (found.length === max) {
         break;
       }
     }
   }
-  console.timeEnd('find max 10');
+  console.timeEnd(`find max ${max}`);
 
   console.log(`checked ${checked} molecules`);
 
@@ -82,7 +85,13 @@ async function run() {
 
 function printMatches(molecules) {
   for (const molecule of molecules) {
-    console.log(`${molecule.chebiId} / ${molecule.chebiName} (${molecule.mf})`);
+    if (config.type === 'chebi') {
+      console.log(`${molecule.id} / ${molecule.name} (${molecule.mf})`);
+    } else if (config.type === 'chembl') {
+      console.log(`${molecule.id} (${molecule.mf})`);
+    } else {
+      throw new Error(`unknown database: ${config.type}`);
+    }
   }
 }
 
