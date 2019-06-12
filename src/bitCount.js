@@ -9,3 +9,17 @@ export function bitCount(n) {
   n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
   return (((n + (n >> 4)) & 0xf0f0f0f) * 0x1010101) >> 24;
 }
+
+export function indexBitCount(index) {
+  return index.reduce((total, num) => total + bitCount(num), 0);
+}
+
+export function bitsOn(n) {
+  const result = [];
+  for (let i = 0; i < 32; i++) {
+    if (((n >>> i) & 1) === 1) {
+      result.push(i);
+    }
+  }
+  return result;
+}
