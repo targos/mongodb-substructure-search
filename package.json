@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "mongodb-substructure-search",
+  "version": "1.0.0",
+  "description": "Experiment with substructure searching algorithm(s) in MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/targos/mongodb-substructure-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/targos/mongodb-substructure-search/issues"
+  },
+  "homepage": "https://github.com/targos/mongodb-substructure-search#readme",
+  "dependencies": {
+    "mongodb": "^3.2.7",
+    "openchemlib": "^7.1.0",
+    "sdf-parser": "^3.1.0"
+  }
+}
