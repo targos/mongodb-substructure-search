@@ -22,6 +22,6 @@
   "dependencies": {
     "mongodb": "^3.2.7",
     "openchemlib": "^7.1.0",
-    "sdf-parser": "^3.1.0"
+    "sdf-parser": "^4.0.0"
   }
 }
