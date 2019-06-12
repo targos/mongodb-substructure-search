@@ -3,17 +3,14 @@ import { createGunzip } from 'zlib';
 
 import OCL from 'openchemlib';
 import sdfParser from 'sdf-parser';
-import mongodb from 'mongodb';
 
 import { bitCount } from './bitCount.js';
+import { connect, close } from './db.js';
 
 const molecules = sdfParser.stream.molecules;
 
 async function run() {
-  const mongo = await mongodb.connect('mongodb://localhost:27017', {
-    useNewUrlParser: true
-  });
-  const db = mongo.db('sss');
+  const db = await connect();
   const collection = db.collection('molecules');
 
   const stream = createReadStream('data/ChEBI_complete.sdf.gz')
@@ -37,7 +34,7 @@ async function run() {
     await collection.insertOne(entry);
   }
 
-  await mongo.close();
+  await close();
 }
 
 run();
