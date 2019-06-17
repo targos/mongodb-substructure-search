@@ -1,6 +1,7 @@
 import { createReadStream } from 'fs';
 import { createGunzip } from 'zlib';
 
+import mongodb from 'mongodb';
 import OCL from 'openchemlib';
 import sdfParser from 'sdf-parser';
 
@@ -37,6 +38,9 @@ async function run() {
     }
 
     entry.index = index.slice();
+    const indexTyped = Uint32Array.from(entry.index);
+    const indexBuffer = Buffer.from(indexTyped.buffer);
+    entry.indexBin = new mongodb.Binary(indexBuffer);
     entry.indexBits = bits;
     entry.ocl = mol.getIDCodeAndCoordinates();
 
